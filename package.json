@@ -2,7 +2,9 @@
   "name": "3-part-kards",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://monku.vxm.pl/new",
   "dependencies": {
+    "croppie": "^2.5.0",
     "lodash": "^4.17.4",
     "pdfmake": "^0.1.33",
     "react": "^16.0.0",

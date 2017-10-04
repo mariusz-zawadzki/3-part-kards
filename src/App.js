@@ -6,16 +6,16 @@ import TwoCards from './components/TwoCards'
 import ThreeCards from './components/ThreeCards'
 class App extends Component {
   render() {
+    const threeCards = this.props.location.pathname !== '/new/2-cards'
     return (
-        <div>
-          <div>Menu goes here</div>
-          <div>
-            <Link to={"/3-cards"}>Three cards</Link>
-            <Link to={"/2-cards"}>Two cards</Link>
-          </div>
+        <div className="container">
+          <ul className="nav nav-tabs">
+            <li className="nav-item"><Link className={"nav-link"+ (threeCards?' active':'')} to={"/new/3-cards"}>Karty trójdzielne</Link></li>
+            <li className="nav-item"><Link className={"nav-link"+ (!threeCards?' active':'')}  to={"/new/2-cards"}>Karty obrazkowe</Link></li>
+          </ul>
             <Switch>
-                <Route path="/3-cards" component={ThreeCards}/>
-                <Route path="/2-cards" component={TwoCards}/>
+                <Route path="/new/3-cards" component={ThreeCards}/>
+                <Route path="/new/2-cards" component={TwoCards}/>
                 <Route component={ThreeCards}/>
             </Switch>
         </div>

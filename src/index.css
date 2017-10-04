@@ -3,3 +3,33 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+.cr-boundary {
+  border: 2px solid black !important;
+}
+.croppie-container{
+  height: auto !important;
+}
+#root .croppie-container .cr-boundary {
+  width: 520px;
+  height: 420px;
+}
+
+#root .twoCards .croppie-container .cr-boundary {
+  width: 520px;
+  height: 520px;
+}
+
+
+.table,
+.table td{
+  vertical-align: top;
+}
+
+.row-fluid{
+  text-align: right;
+}
+
+.cr-viewport
+{
+  border: 0px !important;
+}
