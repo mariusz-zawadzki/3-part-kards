@@ -2,7 +2,7 @@
   "name": "3-part-kards",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://monku.vxm.pl/new",
+  "homepage": "https://narzedzia-nauczyciela.firebaseapp.com/",
   "dependencies": {
     "croppie": "^2.5.0",
     "lodash": "^4.17.4",
@@ -17,6 +17,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "yarn build && firebase deploy --only hosting",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { EMPTY_URL } from './../../consts'
 import { savePdfCode } from './../../pdf/save-pdf'
 import _ from 'lodash';
 
@@ -27,7 +26,7 @@ class GridCell extends Component {
     createState(color) {
         return {
             style: {
-                'background-color': color
+                'backgroundColor': color
             },
             color
         }
@@ -101,7 +100,7 @@ class GridDraw extends Component {
     }
     drawHandler(row, col, color, oldColor) {
         
-        if(color==oldColor)
+        if(color===oldColor)
         {
             return;
         }
@@ -118,7 +117,7 @@ class GridDraw extends Component {
         }
         const oldLegend = legend[oldColor] || {};
         delete oldLegend[field];
-        if (Object.size(oldLegend) == 0) {
+        if (Object.size(oldLegend) === 0) {
             delete legend[oldColor];
         }
         this.setState({ legend });
@@ -139,43 +138,41 @@ class GridDraw extends Component {
 
         let rowRenderer = (rownumber, color) => {
             return numbers.map((number) =>
-                <GridCell number={number} rownumber={rownumber} pressed={this.state.pressed} 
+                <GridCell key={"gridCell_"+number+"_"+rownumber} number={number} rownumber={rownumber} pressed={this.state.pressed} 
                 drawColor={this.state.drawColor}
                     clear={this.state.clear}
                     drawHandler={this.drawHandler} />
             );
         }
         let rows = numbers.map((number) =>
-            <GridRenderer number={number} color={this.state.color} rowRenderer={rowRenderer} />
+            <GridRenderer key={"GridRender_"+number} number={number} color={this.state.color} rowRenderer={rowRenderer} />
         );
 
         let legend = []
-        console.log("rendering",this.state.legend)
         _.forOwn(this.state.legend, (value, element) => {
             let elements = []
             _.forOwn(value, (k, v) => {
-                elements.push(<span>{v}; </span>)
+                elements.push(<span key={v}>{v}; </span>)
             });
             legend.push(<div className="col">
-                <span style={{ 'background-color': element }}>KOLOR</span>
+                <span key={"color"+element}style={{ 'backgroundColor': element }}>KOLOR</span>
                 {elements}
             </div>)
         })
 
         let colors = [
-            '#000000', //black: 
-            '#ffffff',//white: 
-            '#ff0000',//red 
-            '#fff200',//yellow: 
-            '#3ed019',//green: 
-            '#0071f3',//blue: 
-            '#ff7f27',//orange: 
-            '#6b2e0b',//brown: 
-            '#ffaec9',//pink: 
-            '#b83dba'//purple: 
-
+            '#000000', //black
+            '#ffffff',//white
+            '#ff0000',//red
+            '#fff200',//yellow
+            '#3ed019',//green
+            '#0071f3',//blue
+            '#ff7f27',//orange
+            '#6b2e0b',//brown
+            '#ffaec9',//pink
+            '#b83dba'//purple:
         ].map((c) => {
-            return <div className='colorPick' onClick={() => this.setState({ 'drawColor': c })} style={{ 'background-color': c }}></div>
+            return <div className='colorPick' key={'colorPick_'+c} onClick={() => this.setState({ 'drawColor': c })} style={{ 'backgroundColor': c }}></div>
         })
         return <div className="container">
             <div className="row">
@@ -199,7 +196,7 @@ class GridDraw extends Component {
                     <div className="row">
                         <br />
                         Wybrany KOLOR:
-                        <div className="colorPick" style={{ 'background-color': this.state.drawColor }}>&nbsp;&nbsp;&nbsp;</div>
+                        <div className="colorPick" style={{ 'backgroundColor': this.state.drawColor }}>&nbsp;&nbsp;&nbsp;</div>
                     </div>
                     <div className="row">
                         {legend}

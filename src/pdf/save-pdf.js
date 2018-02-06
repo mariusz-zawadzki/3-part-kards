@@ -162,7 +162,7 @@ export function savePdfCode(data, callback) {
         elements.sort((a,b)=>{
             let aA = a.split(" ");
             let bA = b.split(" ");
-            if(aA[1] == bA[1])
+            if(aA[1] === bA[1])
             {
                 return aA[0]-bA[0]
             }
@@ -191,15 +191,15 @@ export function savePdfCode(data, callback) {
 
         return _.times(gridWidth, () => {
             let v = gen.next().value;
-            if (v == 0) {
-                if (rowNum == 0) {
+            if (v === 0) {
+                if (rowNum === 0) {
                     return {border, ...pixelElement}
                 }
                 else {
                     return {text:rowNum,border};
                 }
             }
-            else if (rowNum == 0) {
+            else if (rowNum === 0) {
                 return {text: LETTERS[v - 1],style:'center',border};
             } else {
                 return pixelElement
@@ -208,7 +208,6 @@ export function savePdfCode(data, callback) {
         });
     })
 
-    const title = 'arkusz-kodowania.pdf'
     try {
         const docDefinition = {
             pageSize: 'A4',
@@ -287,6 +286,7 @@ export function savePdfCode(data, callback) {
             document.getElementById('pdfV').src = outDoc;
 
         });
+        // const title = 'arkusz-kodowania.pdf'
         // window.pdfMake.createPdf(docDefinition).download(title, function(){callback(true);});
 
     }
