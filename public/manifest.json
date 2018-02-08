@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Pomocne narzędzia",
+  "name": "Narzędzia dla nauczyciela montessori.",
   "icons": [
     {
       "src": "favicon.ico",
