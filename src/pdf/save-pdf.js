@@ -151,6 +151,7 @@ export function savePdf2(pages, callback) {
 }
 
 export function savePdfCode(data, callback) {
+    console.log(data);
     let legend = [];
     let gridWidth = data.width + 1;
     let gridHeight = data.height + 1;
@@ -170,12 +171,36 @@ export function savePdfCode(data, callback) {
                 return aA[1]-bA[1]
             }
         })
-        elements = elements.map((e)=>{return e+"; "})
+        elements = elements.map((e)=>{return e+";"})
+        let elementsString = _.join(elements, ' ');
+
+        elements = []
+        while(elementsString.length> 0)
+        {
+            let lastSemiolon = 75;
+            while(lastSemiolon>0 && elementsString.charAt(lastSemiolon) !== ';'){
+                if(elementsString.charAt(lastSemiolon) !== ';')
+                {
+                    lastSemiolon--;
+                }
+            }
+            if(lastSemiolon > 0){
+                elements.push(elementsString.substr(0, lastSemiolon+1)+"\n")
+                elementsString = elementsString.substr(lastSemiolon+2);
+            }
+            if(lastSemiolon <=0)
+            {
+                elements.push(elementsString+"\n");
+                elementsString = "";
+            }
+        }
+        console.log("elements", elements)
         legend.push({
             element,
             elements
         })
     })
+
     function* idMaker() {
         var index = 0;
         while (true)
@@ -263,7 +288,7 @@ export function savePdfCode(data, callback) {
             style: 'tableExample',
             table: {
                 border: [false, false, false, false],
-                widths: [imageWidht + 30, imageWidht],
+                widths: [imageWidht + 40, imageWidht],
                 body: [[
                     {
                         style: 'gridTable',

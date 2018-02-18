@@ -83,7 +83,25 @@ class GridDraw extends Component {
         this.mouseUp = this.mouseUp.bind(this);
         this.drawHandler = this.drawHandler.bind(this);
         this.clear = this.clear.bind(this);
-        this.state =  { "pressed": false, drawColor: "#000000", legend: {}, clear: false};
+        this.changeHeight = this.changeHeight.bind(this);
+        this.changeWidth = this.changeWidth.bind(this);
+        this.state =  { "pressed": false, drawColor: "#000000", legend: {}, clear: false, width: 17, height:23};
+    }
+
+    changeHeight(e){
+        let x = e.target.value;
+        var parsed = parseInt(x, 10);
+        if(!isNaN(parsed)){
+            this.setState({height:  Math.max(0, Math.min(23,parsed))},this.clear);
+        }
+    }
+
+    changeWidth(e){
+        let x = e.target.value;
+        var parsed = parseInt(x, 10);
+        if(!isNaN(parsed)){
+            this.setState({width: Math.max(0, Math.min(17,parsed))},this.clear)
+        }
     }
 
     mouseDown() {
@@ -94,10 +112,6 @@ class GridDraw extends Component {
         this.setState({ "pressed": false });
     }
 
-    shouldComponentUpdate(nextProps, nextState){
-        console.log(nextState);
-        return true;//super.shouldComponentUpdate(nextProps, nextState)
-    }
     drawHandler(row, col, color, oldColor) {
         
         if(color===oldColor)
@@ -130,21 +144,24 @@ class GridDraw extends Component {
     }
 
     render() {
-        const gridSize = 15;
-        let numbers = [];
-        for (let i = 1; i <= gridSize; i++) {
-            numbers.push(i);
+        let rowCount = [];
+        let cols = [];
+        for (let i = 1; i <= this.state.height; i++) {
+            rowCount.push(i);
+        }
+        for (let i = 1; i <= this.state.width; i++) {
+            cols.push(i);
         }
 
         let rowRenderer = (rownumber, color) => {
-            return numbers.map((number) =>
+            return cols.map((number) =>
                 <GridCell key={"gridCell_"+number+"_"+rownumber} number={number} rownumber={rownumber} pressed={this.state.pressed} 
                 drawColor={this.state.drawColor}
                     clear={this.state.clear}
                     drawHandler={this.drawHandler} />
             );
         }
-        let rows = numbers.map((number) =>
+        let rows = rowCount.map((number) =>
             <GridRenderer key={"GridRender_"+number} number={number} color={this.state.color} rowRenderer={rowRenderer} />
         );
 
@@ -154,8 +171,8 @@ class GridDraw extends Component {
             _.forOwn(value, (k, v) => {
                 elements.push(<span key={v}>{v}; </span>)
             });
-            legend.push(<div className="col">
-                <span key={"color"+element}style={{ 'backgroundColor': element }}>KOLOR</span>
+            legend.push(<div  key={"color"+element} className="col">
+                <span style={{ 'backgroundColor': element }}>KOLOR</span>
                 {elements}
             </div>)
         })
@@ -189,7 +206,16 @@ class GridDraw extends Component {
                     </table>
                 </div>
                 <div className="col">
-                    COLOR SELECT TABLE
+                    <div>
+                        Rozmiar:
+                        <div className="row">
+                        Szerokosć: <input type="text" value={this.state.width} onChange={this.changeWidth} size={2}/>
+                        </div>
+                        <div className="row">
+                        Wysokosc: <input type="text" value={this.state.height} onChange={this.changeHeight} size={2}/>
+                        </div>
+                        
+                    </div>
                     <div className="row">
                         {colors}
                     </div>
@@ -205,8 +231,8 @@ class GridDraw extends Component {
 
                         <input type="button" onClick={this.clear} value="WYCZYSC" />
                         <input type="button" onClick={() => savePdfCode({
-                            width: gridSize,
-                            height: gridSize,
+                            width: this.state.width,
+                            height: this.state.height,
                             legend: this.state.legend
                         }, (t) => { })} value="ZAPISZ" />
                     </div>
