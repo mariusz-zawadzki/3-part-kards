@@ -13,7 +13,7 @@ Object.size = function (obj) {
 class GridCell extends Component {
     constructor(props) {
         super(props)
-        let color = "#fff"
+        let color = WHITE
         this.changeColor = this.changeColor.bind(this);
         this.paintBackgroud = this.paintBackgroud.bind(this);
 
@@ -34,14 +34,13 @@ class GridCell extends Component {
     componentWillReceiveProps(nextProps) {
         // You don't have to do this check first, but it can help prevent an unneeded render
         if (nextProps.drawColor !== this.state.color && nextProps.clear) {
-            console.log("CLEARING!")
             this.setState(this.createState(nextProps.drawColor));
         }
     }
 
     changeColor(event) {
         if (this.props.pressed) {
-            let color = this.props.pressed ? this.props.drawColor : "#fff"
+            let color = this.props.pressed ? this.props.drawColor : WHITE
             this.paintBackgroud(color)
         }
     }
@@ -73,6 +72,9 @@ let GridRenderer = (props) => {
     </tr>
 }
 
+const WHITE = "#ffffff";
+const DEFAULT_WIDHT = 17;
+const DEFAULT_HEIGHT = 23;
 
 class GridDraw extends Component {
     
@@ -85,7 +87,21 @@ class GridDraw extends Component {
         this.clear = this.clear.bind(this);
         this.changeHeight = this.changeHeight.bind(this);
         this.changeWidth = this.changeWidth.bind(this);
-        this.state =  { "pressed": false, drawColor: "#000000", legend: {}, clear: false, width: 17, height:23};
+        this.state =  { "pressed": false, drawColor: "#000000", legend: {}, colorGrid:this.generateGrid(DEFAULT_HEIGHT, DEFAULT_WIDHT) , clear: false, width: DEFAULT_WIDHT, height:DEFAULT_HEIGHT};
+    }
+
+
+    generateGrid(height, width)
+    {
+        let row = [];
+        let cols = [];
+        for (let i = 1; i <= width; i++) {
+            row.push(WHITE);
+        }
+        for (let i = 1; i <= height; i++) {
+            cols.push(row.slice());
+        }
+        return cols;
     }
 
     changeHeight(e){
@@ -112,7 +128,7 @@ class GridDraw extends Component {
         this.setState({ "pressed": false });
     }
 
-    drawHandler(row, col, color, oldColor) {
+    drawHandler(colNumber, rowNumber, color, oldColor) {
         
         if(color===oldColor)
         {
@@ -122,9 +138,9 @@ class GridDraw extends Component {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
         ]
         let legend = {...this.state.legend}
-        const field = LETTERS[row - 1] + " " + col;
+        const field = LETTERS[colNumber - 1] + " " + rowNumber;
 
-        if (!(color === "#ffffff" || color === "#fff" || color === "white")) {
+        if (!(color === WHITE || color === "#fff" || color === "white")) {
             const colorLegend = legend[color] || {}
             colorLegend[field] = true;
             legend[color] = colorLegend
@@ -134,12 +150,18 @@ class GridDraw extends Component {
         if (Object.size(oldLegend) === 0) {
             delete legend[oldColor];
         }
-        this.setState({ legend });
+        let newGrid = this.state.colorGrid.slice();
+        let newRow = newGrid[rowNumber-1].slice();
+        newRow[colNumber-1] = color;
+        newGrid[rowNumber-1] = newRow;
+        console.log("New grid",newGrid)
+        this.setState({ legend, colorGrid:newGrid });
     }
 
     clear() {
-        this.setState({ "pressed": false, drawColor: "#ffffff", legend: {} , clear:true},()=>{
-            this.setState( { "pressed": false, drawColor: "#000000", legend: {}, clear: false})
+        this.setState({ "pressed": false, drawColor: WHITE, legend: {} , clear:true},()=>{
+            let grid = this.generateGrid(this.state.height,this.state.width);
+            this.setState( { "pressed": false, drawColor: "#000000", colorGrid: grid, legend: {}, clear: false})
         });
     }
 
@@ -179,7 +201,7 @@ class GridDraw extends Component {
 
         let colors = [
             '#000000', //black
-            '#ffffff',//white
+            WHITE,//white
             '#ff0000',//red
             '#fff200',//yellow
             '#3ed019',//green
@@ -233,7 +255,8 @@ class GridDraw extends Component {
                         <input type="button" onClick={() => savePdfCode({
                             width: this.state.width,
                             height: this.state.height,
-                            legend: this.state.legend
+                            legend: this.state.legend,
+                            colorGrid: this.state.colorGrid
                         }, (t) => { })} value="ZAPISZ" />
                     </div>
                 </div>

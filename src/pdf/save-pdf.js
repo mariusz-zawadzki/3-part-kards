@@ -139,7 +139,6 @@ export function savePdf2(pages, callback) {
 
 
         docDefinition.content = pages.map(getTwoPartPage)
-        console.log(pages)
         docDefinition.content[docDefinition.content.length - 1].pageBreak = undefined;
         window.pdfMake.createPdf(docDefinition).download(title, function () { callback(true); });
 
@@ -150,6 +149,43 @@ export function savePdf2(pages, callback) {
     }
 }
 
+let pixelElement = { image: pixel, height: 16, paddingTop: 0, paddingBottom: 0 };
+const border = [false,false, false, false];
+let gridGenerator = (w, h, colorGrid, fill)=> {
+    function* idMaker() {
+        var index = 0;
+        while (true)
+            yield index++;
+    }
+    let rowGenerator = idMaker();
+    return _.times(h, () => {
+        let rowNum = rowGenerator.next().value;
+        var gen = idMaker();
+
+        return _.times(w, () => {
+            let v = gen.next().value;
+            if (v === 0) {
+                if (rowNum === 0) {
+                    return {border, text:""}
+                }
+                else {
+                    return {text:rowNum,border};
+                }
+            }
+            else if (rowNum === 0) {
+                return {text: LETTERS[v - 1],style:'center',border};
+            } else {
+                let fillColor = undefined;
+                if(fill)
+                {
+                    fillColor = colorGrid[rowNum-1][v-1];
+                }
+                return {...pixelElement, fillColor}
+
+            }
+        });
+    })
+}
 export function savePdfCode(data, callback) {
     console.log(data);
     let legend = [];
@@ -194,44 +230,13 @@ export function savePdfCode(data, callback) {
                 elementsString = "";
             }
         }
-        console.log("elements", elements)
         legend.push({
             element,
             elements
         })
     })
 
-    function* idMaker() {
-        var index = 0;
-        while (true)
-            yield index++;
-    }
-
-    let pixelElement = { image: pixel, height: 16, paddingTop: 0, paddingBottom: 0 };
-    let rowGenerator = idMaker();
-    const border = [false,false, false, false];
-    let grid = _.times(gridHeight, () => {
-        let rowNum = rowGenerator.next().value;
-        var gen = idMaker();
-
-        return _.times(gridWidth, () => {
-            let v = gen.next().value;
-            if (v === 0) {
-                if (rowNum === 0) {
-                    return {border, ...pixelElement}
-                }
-                else {
-                    return {text:rowNum,border};
-                }
-            }
-            else if (rowNum === 0) {
-                return {text: LETTERS[v - 1],style:'center',border};
-            } else {
-                return pixelElement
-
-            }
-        });
-    })
+   
 
     try {
         const docDefinition = {
@@ -273,6 +278,8 @@ export function savePdfCode(data, callback) {
                 { text: row.elements }
             ]
         });
+        let grid = gridGenerator(gridWidth,gridHeight,data.colorGrid, false);
+        let coloredGrid = gridGenerator(gridWidth,gridHeight, data.colorGrid, true);
         let legendTable = [
             {text:'Legenda\n'},
                 {
@@ -284,7 +291,7 @@ export function savePdfCode(data, callback) {
                 },
             layout: 'noBorders'
         }]
-        const pagePdf = {
+        const pdfPages = [{
             style: 'tableExample',
             table: {
                 border: [false, false, false, false],
@@ -301,11 +308,31 @@ export function savePdfCode(data, callback) {
                     legendTable
                 ]]
             },
+            pageBreak: 'after',
             layout: 'noBorders'
-        };
+        },
+        {
+            style: 'tableExample',
+            table: {
+                border: [false, false, false, false],
+                widths: [imageWidht + 40, imageWidht],
+                body: [[
+                    {
+                        style: 'gridTable',
+                        table: {
+                            widths: _.times(gridWidth, () => 15),
+                            body: coloredGrid
+                        }
+                    }
+                    ,
+                    [""]
+                ]]
+            },
+            layout: 'noBorders'
+        }];
 
 
-        docDefinition.content = [pagePdf];
+        docDefinition.content = pdfPages;
         docDefinition.content[docDefinition.content.length - 1].pageBreak = undefined;
         window.pdfMake.createPdf(docDefinition).getDataUrl(function (outDoc) {
             document.getElementById('pdfV').src = outDoc;
