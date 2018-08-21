@@ -70,24 +70,24 @@ let GridRenderer = (props) => {
         <td style={{ border: "0px" }}>{number}</td>
         {rowRenderer(number, color)}
     </tr>
-}
+};
 
 const WHITE = "#ffffff";
-const DEFAULT_WIDHT = 17;
+const DEFAULT_WIDTH = 17;
 const DEFAULT_HEIGHT = 23;
 
 class GridDraw extends Component {
     
 
     constructor(props) {
-        super(props)
+        super(props);
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseUp = this.mouseUp.bind(this);
         this.drawHandler = this.drawHandler.bind(this);
         this.clear = this.clear.bind(this);
         this.changeHeight = this.changeHeight.bind(this);
         this.changeWidth = this.changeWidth.bind(this);
-        this.state =  { "pressed": false, drawColor: "#000000", legend: {}, colorGrid:this.generateGrid(DEFAULT_HEIGHT, DEFAULT_WIDHT) , clear: false, width: DEFAULT_WIDHT, height:DEFAULT_HEIGHT};
+        this.state =  { "pressed": false, drawColor: "#000000", legend: {}, colorGrid:this.generateGrid(DEFAULT_HEIGHT, DEFAULT_WIDTH) , clear: false, width: DEFAULT_WIDTH, height:DEFAULT_HEIGHT};
     }
 
 
@@ -136,11 +136,11 @@ class GridDraw extends Component {
         }
         const LETTERS = [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-        ]
+        ];
         let legend = {...this.state.legend}
         const field = LETTERS[colNumber - 1] + " " + rowNumber;
 
-        if (!(color === WHITE || color === "#fff" || color === "white")) {
+        if (GridDraw.isNotWhite(color)) {
             const colorLegend = legend[color] || {}
             colorLegend[field] = true;
             legend[color] = colorLegend
@@ -154,8 +154,11 @@ class GridDraw extends Component {
         let newRow = newGrid[rowNumber-1].slice();
         newRow[colNumber-1] = color;
         newGrid[rowNumber-1] = newRow;
-        console.log("New grid",newGrid)
         this.setState({ legend, colorGrid:newGrid });
+    }
+
+    static isNotWhite(color) {
+        return !(color === WHITE || color === "#fff" || color === "white");
     }
 
     clear() {
@@ -200,18 +203,18 @@ class GridDraw extends Component {
         })
 
         let colors = [
-            '#000000', //black
-            WHITE,//white
-            '#ff0000',//red
-            '#fff200',//yellow
-            '#3ed019',//green
-            '#0071f3',//blue
-            '#ff7f27',//orange
-            '#6b2e0b',//brown
-            '#ffaec9',//pink
-            '#b83dba'//purple:
+            '#000000',
+            '#ffffff',
+            '#ff0000',
+            '#fff200',
+            '#3ed019',
+            '#0071f3',
+            '#ff7f27',
+            '#6b2e0b',
+            '#ffaec9',
+            '#b83dba'
         ].map((c) => {
-            return <div className='colorPick' key={'colorPick_'+c} onClick={() => this.setState({ 'drawColor': c })} style={{ 'backgroundColor': c }}></div>
+            return <div className='colorPick' key={'colorPick_' + c} onClick={() => this.setState({'drawColor': c})} style={{'backgroundColor': c}}/>
         })
         return <div className="container">
             <div className="row">
@@ -219,8 +222,14 @@ class GridDraw extends Component {
                     <h3 className="text-center">Siatka kodowania</h3>
                 </div>
             </div>
+
             <div className="row">
+                <div className={"col"}>
+
+                </div>
+
                 <div className="col" onClick={this.mouseClick} onMouseDown={this.mouseDown} onMouseUp={this.mouseUp}>
+                    Old grid
                     <table className="grid-draw-table">
                         <tbody>
                             {rows}

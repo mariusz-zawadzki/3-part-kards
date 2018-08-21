@@ -7,12 +7,15 @@
     "croppie": "^2.5.0",
     "lodash": "^4.17.4",
     "pdfmake": "^0.1.33",
-    "react": "^16.0.0",
+    "react": "^16.4.2",
     "react-croppie": "^1.0.0",
-    "react-dom": "^16.0.0",
+    "react-dom": "^16.4.2",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "1.0.14"
+    "react-scripts": "1.0.14",
+    "raf": "3.4.0",
+    "react-konva": "^1.7.12",
+    "konva": "^2.1.8"
   },
   "scripts": {
     "start": "react-scripts start",
