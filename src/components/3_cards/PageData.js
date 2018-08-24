@@ -1,95 +1,113 @@
 import React, {Component} from 'react';
-import Croppie from 'croppie';
 import FileUpload from "./../FileUpload";
 import _ from 'lodash';
 import {EMPTY_URL} from './../../consts'
+
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
+
 class PageData extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        
+
         let stateImg = EMPTY_URL;
-        let width = 130*4;
-        let height =  105*4
+        let width = 130 * 4;
+        let height = 105 * 4
         ;
         this.state = {
-            'title':'',
-            'croppieUrl':stateImg,
-            'imgData':stateImg,
+            zoom : 100.0,
+            'title': '',
+            'croppieUrl': stateImg,
+            'imgData': stateImg,
             width,
-            height,
-            boundryAndViewPort : { width, height}
+            height
         }
-        this.previewOnClick = this.previewOnClick.bind(this);
     }
 
-    componentDidMount(){
-        let opts = {
-            url:this.state.croppieUrl,
-            viewport: this.state.boundryAndViewPort,
-            boundry: this.state.boundryAndViewPort,
-            showZoomer: true,
-            enforceBoundary: false,
-            update: _.debounce(this.previewOnClick,300)
-        };
-        this.croppie = new Croppie(this.refs.croppieElement,opts);
-    }
-
-    componentDidUpdate(prevProps, prevState){
-        if(prevState.croppieUrl !== this.state.croppieUrl)
-        {
-            this.croppie.destroy();
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.croppieUrl !== this.state.croppieUrl) {
             this.componentDidMount()
         }
+
+        if(prevState.zoom !== this.state.zoom){
+            this.refs.cropper.zoomTo(this.state.zoom/100.0);
+        }
     }
 
-    previewOnClick(e){
-        if(e.points[0]=== '0' &&
-        e.points[1] === '0' &&
-        e.points[2] === '516' &&
-        e.points[3] === '416' && e.zoom === 1)
-        {
-            return;
-        }
-        let that = this;
-        this.croppie.result({type:'rawcanvas','size':'viewport'}).then(function (blob) {
-            let org = blob.toDataURL();
-            let image = new Image();
-            image.src = org;
-            let canv = blob;
-            let hdc = canv.getContext('2d')
-        
-            let w = that.state.boundryAndViewPort.width;
-            let h = that.state.boundryAndViewPort.height;
-            // Fill the path
-            hdc.fillStyle = "#fff";
-            hdc.fillRect(0,0,w,h);
-            image.onload = ()=>
+    _crop() {
+        const croppedCanvas = this.refs.cropper.getCroppedCanvas(
             {
-                hdc.drawImage(image,0,0)
-                that.setState(prevState => ({
-                        imgData: canv.toDataURL()
-                }));
-                
-            }
-        });
+                width: 520,
+                height: 420,
+                fillColor: '#fff'
+            });
+
+        const imgData = croppedCanvas.toDataURL();
+        console.log(imgData)
+        if (this.state.imageDate !== imgData) {
+            this.setState({imgData})
+        }
     }
+
+    _setZoom(e){
+        _.debounce((zoom)=>{
+            this.setState({zoom})
+        })(e.target.value);
+    }
+
     render() {
         return (
             <div className="col">
                 <div className="form-group">
-                    <FileUpload updateUrl={(url)=>{
-                                    this.setState({"croppieUrl":url});
-                                    this.croppie.bind({'url':url})
-                                }}/>
+                    <FileUpload updateUrl={(url) => {
+                        this.setState({"croppieUrl": url});
+                        // this.croppie.bind({'url': url})
+                    }}/>
                 </div>
-                <div ref="croppieElement"></div>
+                {/*<div ref="croppieElement"></div>*/}
+                <div>
+                    <Cropper
+                        src={this.state.croppieUrl}
+                        viewMode={0}
+                        dragMode={'move'}
+                        autoCropArea={1}
+                        restore={false}
+                        modal={false}
+                        guides={false}
+                        highlight={false}
+                        cropBoxMovable={false}
+                        cropBoxResizable={false}
+                        toggleDragModeOnDblclick={false}
+                        aspectRation={this.state.width/this.state.height}
+                        zoomable={true}
+                        background={true}
+                        backgroundColor={'#fff'}
+                        ref='cropper'
+                        crop={this._crop.bind(this)}
+
+                    />
+                    <input type="range" min={0.00} max={400.00} step={0.1} value={this.state.zoom} onChange={(e)=>{
+                        this.setState({zoom:e.target.value})
+                    }
+                    }/>
+                    <input type="number"  min={0.00} max={400.00} step={0.1}  value={this.state.zoom} onChange={(e)=>{
+                        this.setState({zoom:e.target.value})
+                    }
+                    }/>
+                </div>
+                <div>
+                    <img src={this.state.imgData} style={{'border': '1px solid red'}}/>
+                </div>
                 <div className="form-group">
-                            <input className="form-control text-center"onChange={(input) => {this.setState({title:this.titleInput.value})}} placeholder="Tytuł" ref={(input) => {
-                                this.titleInput = input;
-                            }}/></div>
+                    <input className="form-control text-center" onChange={(input) => {
+                        this.setState({title: this.titleInput.value})
+                    }} placeholder="Tytuł" ref={(input) => {
+                        this.titleInput = input;
+                    }}/></div>
                 <hr/>
             </div>
-        );
+        )
+            ;
     }
 }
 
