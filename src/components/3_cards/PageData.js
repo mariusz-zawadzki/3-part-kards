@@ -1,21 +1,24 @@
 import React, {Component} from 'react';
 import FileUpload from "./../FileUpload";
 import _ from 'lodash';
-import {EMPTY_URL} from './../../consts'
+import {CARD_SIZES, EMPTY_URL, ZOOM, ZOOM_PERCENTAGE} from './../../consts'
 
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
+import '../../css/cropper.css'
+
 
 class PageData extends Component {
     constructor(props) {
         super(props);
 
         let stateImg = EMPTY_URL;
-        let width = 130 * 4;
-        let height = 105 * 4
+        // stateImg = '/child.jpg'
+        let width = CARD_SIZES.width;
+        let height = CARD_SIZES.height
         ;
         this.state = {
-            zoom : 100.0,
+            zoom: ZOOM_PERCENTAGE.default,
             'title': '',
             'croppieUrl': stateImg,
             'imgData': stateImg,
@@ -24,79 +27,149 @@ class PageData extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevState.croppieUrl !== this.state.croppieUrl) {
-            this.componentDidMount()
-        }
+    stateSet(cropper, zoom){
+        cropper.zoomTo(zoom);
+    }
 
-        if(prevState.zoom !== this.state.zoom){
-            this.refs.cropper.zoomTo(this.state.zoom/100.0);
+    delayedSetState = _.debounce(this.stateSet,300);
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.zoom !== this.state.zoom) {
+            const cropper = this.refs.cropper;
+            const zoom = this.state.zoom / 100.0;
+            if(this.state.delayed){
+                this.delayedSetState(cropper, zoom)
+            }
+            else
+            {
+                this.stateSet(cropper, zoom);
+            }
         }
+    }
+
+    _read(){
+        this.refs.cropper.setCropBoxData({width:CARD_SIZES.width});
     }
 
     _crop() {
         const croppedCanvas = this.refs.cropper.getCroppedCanvas(
             {
-                width: 520,
-                height: 420,
+                width: CARD_SIZES.width,
+                height: CARD_SIZES.height,
                 fillColor: '#fff'
             });
 
         const imgData = croppedCanvas.toDataURL();
-        console.log(imgData)
-        if (this.state.imageDate !== imgData) {
-            this.setState({imgData})
+        const data = this.refs.cropper.getData();
+        let newState = {};
+        if (this.state.imgData !== imgData) {
+            newState = {imgData}
+        }
+        if(this.state.croppieUrl === EMPTY_URL && (data.x !== 0|| data.y !== 0)){
+            newState = {...newState, changed: true}
+        }
+        const zoom = this.extractZoom();
+        const currentZoom = parseFloat(this.state.zoom);
+        if (currentZoom.toFixed(2) !== zoom.toFixed(2)) {
+            newState = {...newState, zoom: zoom.toFixed(2), delayed:false}
+        }
+        if (newState !== {}) {
+            this.setState({...newState})
         }
     }
 
-    _setZoom(e){
-        _.debounce((zoom)=>{
-            this.setState({zoom})
-        })(e.target.value);
+    extractZoom() {
+        let image = this.refs.cropper.getImageData();
+        return (image.width / image.naturalWidth) * 100.0;
+    }
+
+    _setZoom(e) {
+        const detail = e.detail;
+        if(detail.ratio > ZOOM.max){
+            e.preventDefault();
+            this.refs.cropper.zoomTo(ZOOM.max);
+        }
+        if(detail.ratio < ZOOM.min){
+            e.preventDefault();
+            this.refs.cropper.zoomTo(ZOOM.min);
+        }
     }
 
     render() {
         return (
-            <div className="col">
+            <div className="col" >
                 <div className="form-group">
                     <FileUpload updateUrl={(url) => {
                         this.setState({"croppieUrl": url});
-                        // this.croppie.bind({'url': url})
                     }}/>
                 </div>
                 {/*<div ref="croppieElement"></div>*/}
-                <div>
+                <div className={"my-cropper-container"}>
+                    <div className="cropper-container">
                     <Cropper
+                        src={this.state.croppieUrl}
+                        viewMode={ 0 }
+                        dragMode={ 'move'}
+                        limited={true}
+                        autoCrop={true}
+                        autoCropArea={1.0}
+                        restore={ false}
+                        modal={ false}
+                        guides={ false}
+                        highlight={ false}
+                        cropBoxMovable={ false}
+                        cropBoxResizable={ false}
+                        minCropBoxWidth={520}
+                        maxCropBoxWidth={520}
+                        toggleDragModeOnDblclick={ false}
+                        aspectRatio={1.2380}
+                        zoomable={true}
+                        zoom={this._setZoom.bind(this) }
+                        background={false}
+                        ref='cropper'
+                        crop={this._crop.bind(this)}
+                        ready={this._read.bind(this)}
+
+                    />
+                        {/*<Cropper
                         src={this.state.croppieUrl}
                         viewMode={0}
                         dragMode={'move'}
-                        autoCropArea={1}
+                        // autoCropArea={1}
+                        center={false}
                         restore={false}
                         modal={false}
                         guides={false}
                         highlight={false}
                         cropBoxMovable={false}
                         cropBoxResizable={false}
+                        // dragBoxWidth={this.state.width}
+                        // dragBoxHeight={this.state.height}
+                        minContainerWidth={this.state.width}
+                        minCropBoxWidth={this.state.width}
+                        minCropBoxHeight={this.state.height}
                         toggleDragModeOnDblclick={false}
-                        aspectRation={this.state.width/this.state.height}
+                        aspectRatio={1.2380}
                         zoomable={true}
-                        background={true}
+                        zoom={this._setZoom.bind(this) }
+                        background={false}
                         backgroundColor={'#fff'}
                         ref='cropper'
                         crop={this._crop.bind(this)}
+                        ready={this._read.bind(this)}
 
-                    />
-                    <input type="range" min={0.00} max={400.00} step={0.1} value={this.state.zoom} onChange={(e)=>{
-                        this.setState({zoom:e.target.value})
-                    }
-                    }/>
-                    <input type="number"  min={0.00} max={400.00} step={0.1}  value={this.state.zoom} onChange={(e)=>{
-                        this.setState({zoom:e.target.value})
-                    }
-                    }/>
-                </div>
-                <div>
-                    <img src={this.state.imgData} style={{'border': '1px solid red'}}/>
+                    />*/}
+                    </div>
+                    <div>
+                        <input type="range" min={ZOOM_PERCENTAGE.min} max={ZOOM_PERCENTAGE.max} step={0.01} value={this.state.zoom} onChange={(e) => {
+                            this.setState({zoom: parseFloat(e.target.value), delayed: false})
+                        }}/>
+                    </div>
+                    <div>
+                        Zoom: <input  className="form-control text-center" type="number" min={ZOOM_PERCENTAGE.min} max={ZOOM_PERCENTAGE.max} step={0.01} value={this.state.zoom} onChange={(e)=>{
+                            this.setState({zoom: parseFloat(e.target.value), delayed: true})
+                        }}/> %
+                    </div>
                 </div>
                 <div className="form-group">
                     <input className="form-control text-center" onChange={(input) => {

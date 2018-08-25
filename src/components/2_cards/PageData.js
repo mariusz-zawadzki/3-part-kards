@@ -2,16 +2,15 @@ import React, {Component} from 'react';
 import Croppie from 'croppie';
 import FileUpload from "./../FileUpload";
 import _ from 'lodash';
-import {EMPTY_URL} from './../../consts'
+import {CARD_SIZES, EMPTY_URL} from './../../consts'
 
 class PageData extends Component {
     constructor(props) {
         super(props);
 
         let stateImg = EMPTY_URL;
-        let width = 130 * 4;
-        let height = 130 * 41
-        ;
+        let width = CARD_SIZES.width;
+        let height = CARD_SIZES.width;
         this.state = {
             'title': '',
             'croppieUrl': stateImg,
@@ -21,6 +20,7 @@ class PageData extends Component {
             boundryAndViewPort: {width, height}
         };
         this.previewOnClick = this.previewOnClick.bind(this);
+        this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentDidMount() {

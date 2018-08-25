@@ -94,8 +94,6 @@ export function savePdf(pages, callback) {
     try {
         const docDefinition = {
             pageSize: 'A4',
-
-            // by default we use portrait, you can change it to landscape if you wish
             pageOrientation: 'landscape',
 
             styles: {
@@ -214,14 +212,14 @@ export function savePdfCode(data, callback) {
         while(elementsString.length> 0)
         {
             let lastSemiolon = 75;
-            while(lastSemiolon>0 && elementsString.charAt(lastSemiolon) !== ';'){
+            while(lastSemiolon>0 && elementsString.charAt(lastSemiolon) !== ';') {
                 if(elementsString.charAt(lastSemiolon) !== ';')
                 {
                     lastSemiolon--;
                 }
             }
             if(lastSemiolon > 0){
-                elements.push(elementsString.substr(0, lastSemiolon+1)+"\n")
+                elements.push(elementsString.substr(0, lastSemiolon+1)+"\n");
                 elementsString = elementsString.substr(lastSemiolon+2);
             }
             if(lastSemiolon <=0)

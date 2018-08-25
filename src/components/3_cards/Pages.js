@@ -30,15 +30,23 @@ class Pages extends Component {
             for (var n in numbers) {
                 let i = numbers[n]
                 let pageState = pages[i].state;
-                if (pageState && pageState.imgData && pageState.imgData !== EMPTY_URL) {
+                if (pageState && pageState.imgData && (pageState.croppieUrl !== EMPTY_URL || pageState.changed)) {
                     reqPages.push({
                         title: pageState.title,
                         imgData: pageState.imgData
                     })
                 }
             }
-            that.setState({renderuje: true});
-            savePdf(reqPages, renderStop, 'karty2.pdf', '/string/pages');
+            if(reqPages.length>0)
+            {
+                console.log(reqPages.length)
+                that.setState({renderuje: true});
+                savePdf(reqPages, renderStop, 'karty2.pdf', '/string/pages');
+            }
+            else
+            {
+                alert("Ustaw przynajmniej jedną kartę.")
+            }
         }
 
         const listItems = numbers.map((number) =>

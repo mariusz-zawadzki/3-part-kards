@@ -60,3 +60,14 @@ body .grid-draw-table{
   padding: 3px;
   border: 1px solid black;
 }
+
+@media (min-width:576px){
+  .jumbotron{
+    padding: 2rem;
+  }
+}
+@media (max-width:575px){
+  .jumbotron{
+    padding: 1rem;
+  }
+}

@@ -22,18 +22,24 @@ class FileUpload extends Component {
         return (
             <form>
             <div className="form-group">
-            <label className="custom-file">
-                <input ref={(input) => {this.fileInput = input;}} 
-                type="file"
-                className="custom-file-input"
-                onChange={(e) => upload(this)}
-                onClick={(e) => {this.value = null}} />
-                <span className="custom-file-control"></span>
-            </label>
+                <label className="btn btn-secondary">Kliknij by wybrać plik.
+                    <input ref={(input) => {this.fileInput = input;}}
+                           type="file"
+                           className="d-none"
+                           onChange={(e) => upload(this)}
+                           onClick={(e) => {this.value = null}} />
+                </label>
             </div>
             </form>
         )
     }
 }
+
+/**
+ *
+ To set up the editor integration, add something like REACT_EDITOR=atom to the .env.local file in your project folder and restart the development server. Learn more: https://goo.gl/MMTaZt
+
+
+ */
 
 export default FileUpload;

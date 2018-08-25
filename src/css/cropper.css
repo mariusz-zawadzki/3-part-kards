@@ -1,0 +1,52 @@
+.cropper-view-box{
+    outline: 2px solid;
+}
+.cropper-container{
+    width: 520px
+}
+.cropper-wrap-box{
+    display: none;
+}
+
+.my-cropper-container {
+    width: 520px !important;
+    /*border: 1px solid greenyellow;*/
+    margin: 0px auto;
+    direction: ltr;
+    font-size: 0;
+    line-height: 0;
+    position: relative;
+    -ms-touch-action: none;
+    touch-action: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+input[type='range']{
+    width: 100%;
+    max-width: 100%;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    background-color: transparent;
+    font-family: sans-serif;
+    font-size: 16px;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    overflow: visible;
+
+}
+
+input[type='number']{
+    width: 90px;
+    display: inline-block;
+    -moz-appearance:textfield;
+    -webkit-appearance: textfield;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+     -webkit-appearance: none;
+     margin: 0;
+ }
