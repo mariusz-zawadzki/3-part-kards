@@ -27,28 +27,27 @@ class PageData extends Component {
         }
     }
 
-    stateSet(cropper, zoom){
+    stateSet(cropper, zoom) {
         cropper.zoomTo(zoom);
     }
 
-    delayedSetState = _.debounce(this.stateSet,300);
+    delayedSetState = _.debounce(this.stateSet, 300);
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.zoom !== this.state.zoom) {
             const cropper = this.refs.cropper;
             const zoom = this.state.zoom / 100.0;
-            if(this.state.delayed){
+            if (this.state.delayed) {
                 this.delayedSetState(cropper, zoom)
             }
-            else
-            {
+            else {
                 this.stateSet(cropper, zoom);
             }
         }
     }
 
-    _read(){
-        this.refs.cropper.setCropBoxData({width:CARD_SIZES.width});
+    _read() {
+        this.refs.cropper.setCropBoxData({width: CARD_SIZES.width});
     }
 
     _crop() {
@@ -65,13 +64,13 @@ class PageData extends Component {
         if (this.state.imgData !== imgData) {
             newState = {imgData}
         }
-        if(this.state.croppieUrl === EMPTY_URL && (data.x !== 0|| data.y !== 0)){
+        if (this.state.croppieUrl === EMPTY_URL && (data.x !== 0 || data.y !== 0)) {
             newState = {...newState, changed: true}
         }
         const zoom = this.extractZoom();
         const currentZoom = parseFloat(this.state.zoom);
         if (currentZoom.toFixed(2) !== zoom.toFixed(2)) {
-            newState = {...newState, zoom: zoom.toFixed(2), delayed:false}
+            newState = {...newState, zoom: zoom.toFixed(2), delayed: false}
         }
         if (newState !== {}) {
             this.setState({...newState})
@@ -85,11 +84,11 @@ class PageData extends Component {
 
     _setZoom(e) {
         const detail = e.detail;
-        if(detail.ratio > ZOOM.max){
+        if (detail.ratio > ZOOM.max) {
             e.preventDefault();
             this.refs.cropper.zoomTo(ZOOM.max);
         }
-        if(detail.ratio < ZOOM.min){
+        if (detail.ratio < ZOOM.min) {
             e.preventDefault();
             this.refs.cropper.zoomTo(ZOOM.min);
         }
@@ -97,7 +96,7 @@ class PageData extends Component {
 
     render() {
         return (
-            <div className="col" >
+            <div className="col">
                 <div className="form-group">
                     <FileUpload updateUrl={(url) => {
                         this.setState({"croppieUrl": url});
@@ -105,70 +104,41 @@ class PageData extends Component {
                 </div>
                 {/*<div ref="croppieElement"></div>*/}
                 <div className={"my-cropper-container"}>
-                    <div className="cropper-container">
                     <Cropper
-                        src={this.state.croppieUrl}
-                        viewMode={ 0 }
-                        dragMode={ 'move'}
-                        limited={true}
-                        autoCrop={true}
-                        autoCropArea={1.0}
-                        restore={ false}
-                        modal={ false}
-                        guides={ false}
-                        highlight={ false}
-                        cropBoxMovable={ false}
-                        cropBoxResizable={ false}
-                        minCropBoxWidth={520}
-                        maxCropBoxWidth={520}
-                        toggleDragModeOnDblclick={ false}
-                        aspectRatio={1.2380}
-                        zoomable={true}
-                        zoom={this._setZoom.bind(this) }
-                        background={false}
-                        ref='cropper'
-                        crop={this._crop.bind(this)}
-                        ready={this._read.bind(this)}
-
-                    />
-                        {/*<Cropper
+                        className={"cropper-container"}
                         src={this.state.croppieUrl}
                         viewMode={0}
                         dragMode={'move'}
-                        // autoCropArea={1}
-                        center={false}
+                        limited={true}
+                        autoCrop={true}
+                        autoCropArea={1.0}
                         restore={false}
                         modal={false}
                         guides={false}
                         highlight={false}
                         cropBoxMovable={false}
                         cropBoxResizable={false}
-                        // dragBoxWidth={this.state.width}
-                        // dragBoxHeight={this.state.height}
-                        minContainerWidth={this.state.width}
-                        minCropBoxWidth={this.state.width}
-                        minCropBoxHeight={this.state.height}
                         toggleDragModeOnDblclick={false}
                         aspectRatio={1.2380}
                         zoomable={true}
-                        zoom={this._setZoom.bind(this) }
                         background={false}
-                        backgroundColor={'#fff'}
                         ref='cropper'
+                        zoom={this._setZoom.bind(this)}
                         crop={this._crop.bind(this)}
                         ready={this._read.bind(this)}
 
-                    />*/}
-                    </div>
+                    />
                     <div>
-                        <input type="range" min={ZOOM_PERCENTAGE.min} max={ZOOM_PERCENTAGE.max} step={0.01} value={this.state.zoom} onChange={(e) => {
+                        <input type="range" min={ZOOM_PERCENTAGE.min} max={ZOOM_PERCENTAGE.max} step={0.01}
+                               value={this.state.zoom} onChange={(e) => {
                             this.setState({zoom: parseFloat(e.target.value), delayed: false})
                         }}/>
                     </div>
                     <div>
-                        Zoom: <input  className="form-control text-center" type="number" min={ZOOM_PERCENTAGE.min} max={ZOOM_PERCENTAGE.max} step={0.01} value={this.state.zoom} onChange={(e)=>{
-                            this.setState({zoom: parseFloat(e.target.value), delayed: true})
-                        }}/> %
+                        Zoom: <input className="form-control text-center" type="number" min={ZOOM_PERCENTAGE.min}
+                                     max={ZOOM_PERCENTAGE.max} step={0.01} value={this.state.zoom} onChange={(e) => {
+                        this.setState({zoom: parseFloat(e.target.value), delayed: true})
+                    }}/> %
                     </div>
                 </div>
                 <div className="form-group">

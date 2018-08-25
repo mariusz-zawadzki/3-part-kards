@@ -37,7 +37,7 @@ class App extends Component {
                                     <li>
                                         Planowane na najbliższy czas:
                                         <ul>
-                                            <li>Możliwość zapisania ustawień danego zdjęcia (przybliżenie, położenie etc.) - rozszerzenie nowego pola z przybliżeniem.</li>
+                                            <li>Możliwość zapisania ustawień danego zdjęcia (przybliżenie, położenie etc.) - rozszerzenie pomysłu z zapisywaniem przybliżenia, tak by można było zapisać pojedyńczy obrazek do ponownej obróbki.</li>
                                             <li>Nowy rodzaj kart - karty językowe.</li>
                                             <li>Nowy rodzaj kart - 'karty kontynentów'.</li>
                                         </ul>
