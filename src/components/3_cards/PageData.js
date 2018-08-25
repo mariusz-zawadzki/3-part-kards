@@ -140,14 +140,14 @@ class PageData extends Component {
                         this.setState({zoom: parseFloat(e.target.value), delayed: true})
                     }}/> %
                     </div>
+                    <div className="form-group">
+                        <input className="form-control text-center" onChange={(input) => {
+                            this.setState({title: this.titleInput.value})
+                        }} placeholder="Tytuł" ref={(input) => {
+                            this.titleInput = input;
+                        }}/></div>
+                    <hr/>
                 </div>
-                <div className="form-group">
-                    <input className="form-control text-center" onChange={(input) => {
-                        this.setState({title: this.titleInput.value})
-                    }} placeholder="Tytuł" ref={(input) => {
-                        this.titleInput = input;
-                    }}/></div>
-                <hr/>
             </div>
         )
             ;
