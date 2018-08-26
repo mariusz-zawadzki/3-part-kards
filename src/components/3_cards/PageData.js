@@ -64,7 +64,7 @@ class PageData extends Component {
         if (this.state.imgData !== imgData) {
             newState = {imgData}
         }
-        if (this.state.croppieUrl === EMPTY_URL && (data.x !== 0 || data.y !== 0)) {
+        if (this.state.croppieUrl === EMPTY_URL && (Math.abs(data.x) > 1 || Math.abs(data.y) > 1)) {
             newState = {...newState, changed: true}
         }
         const zoom = this.extractZoom();
