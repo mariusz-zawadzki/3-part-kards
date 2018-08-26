@@ -5,7 +5,7 @@ function getTwoPartPage(page) {
     const imageLeft = page.imgDataLeft;
     const imageRight = page.imgDataRight;
     let imageWidht = 382 - 7;
-    const pagePdf = {
+    return {
         style: 'tableExample',
         table: {
             widths: [imageWidht, imageWidht],
@@ -25,21 +25,12 @@ function getTwoPartPage(page) {
         },
         pageBreak: 'after',
         layout: {
-            paddingLeft: function (i, node) {
-                return 14
-            },
-            paddingRight: function (i, node) {
-                return 14
-            },
-            paddingTop: function (i, node) {
-                return 12;
-            },
-            paddingBottom: function (i, node) {
-                return 12;
-            }
+            paddingLeft: () => 14,
+            paddingRight: () => 14,
+            paddingTop: () => 14,
+            paddingBottom: () => 14
         }
     };
-    return pagePdf;
 }
 
 function getTriPartPage(page) {
@@ -47,7 +38,7 @@ function getTriPartPage(page) {
     const title = page.title;
     let imageWidht = 382 - 7;
     let pixelElement = { image: pixel, height: 71 - 24 - 9, border: [false, false, false, false], paddingTop: 0, paddingBottom: 0 };
-    const pagePdf = {
+    return {
         style: 'tableExample',
         table: {
             widths: [imageWidht, imageWidht],
@@ -63,34 +54,22 @@ function getTriPartPage(page) {
                         width: imageWidht
                     }
                 ],
-                [{ text: title, 'align': 'center', fontSize: 30 }],
-                [{ text: title, 'align': 'center', fontSize: 30 }, pixelElement]
+                [{text: title, 'align': 'center', fontSize: 30}],
+                [{text: title, 'align': 'center', fontSize: 30}, pixelElement]
             ]
         },
         pageBreak: 'after',
         layout: {
-            paddingLeft: function (i, node) {
-                return (i === 0 || i === 1) ? 14 : 0
-            },
-            paddingRight: function (i, node) {
-                return (i === 0 || i === 1) ? 14 : 0
-            },
-            paddingTop: function (i, node) {
-                return (i === 1 || i === 2) ? 12 + 6 : 12;
-            },
-            paddingBottom: function (i, node) {
-                if (i === 1 || i === 2) {
-                    return 12 + 6;
-                }
-                return 12;
-            }
+            paddingLeft: (i) => (i === 0 || i === 1) ? 14 : 0,
+            paddingRight: (i) => (i === 0 || i === 1) ? 14 : 0,
+            paddingTop: (i) => (i === 1 || i === 2) ? 12 + 6 : 12,
+            paddingBottom: (i) => (i === 1 || i === 2) ? 12 + 6 : 12
         }
     };
-    return pagePdf;
 }
 
 export function savePdf(pages, callback) {
-    const title = 'karty.pdf'
+    const title = 'karty.pdf';
     try {
         const docDefinition = {
             pageSize: 'A4',
@@ -101,11 +80,11 @@ export function savePdf(pages, callback) {
                     margin: [-20, 0, 0, 0],
                     alignment: 'center'
                 }
-            },
+            }
         };
 
 
-        docDefinition.content = pages.map(getTriPartPage)
+        docDefinition.content = pages.map(getTriPartPage);
         docDefinition.content[docDefinition.content.length - 1].pageBreak = undefined;
         window.pdfMake.createPdf(docDefinition).download(title, function () { callback(true); });
 
@@ -119,9 +98,9 @@ export function savePdf(pages, callback) {
 
 const LETTERS = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-]
+];
 export function savePdf2(pages, callback) {
-    const title = 'karty.pdf'
+    const title = 'karty.pdf';
     try {
         const docDefinition = {
             pageSize: 'A4',
@@ -136,7 +115,7 @@ export function savePdf2(pages, callback) {
         };
 
 
-        docDefinition.content = pages.map(getTwoPartPage)
+        docDefinition.content = pages.map(getTwoPartPage);
         docDefinition.content[docDefinition.content.length - 1].pageBreak = undefined;
         window.pdfMake.createPdf(docDefinition).download(title, function () { callback(true); });
 
@@ -183,14 +162,14 @@ let gridGenerator = (w, h, colorGrid, fill)=> {
             }
         });
     })
-}
+};
 export function savePdfCode(data, callback) {
     console.log(data);
     let legend = [];
     let gridWidth = data.width + 1;
     let gridHeight = data.height + 1;
     _.forOwn(data.legend, (value, element) => {
-        let elements = []
+        let elements = [];
         _.forOwn(value, (k, v) => {
             elements.push(v)
         });
@@ -204,11 +183,11 @@ export function savePdfCode(data, callback) {
             else{
                 return aA[1]-bA[1]
             }
-        })
-        elements = elements.map((e)=>{return e+";"})
+        });
+        elements = elements.map((e)=>{return e+";"});
         let elementsString = _.join(elements, ' ');
 
-        elements = []
+        elements = [];
         while(elementsString.length> 0)
         {
             let lastSemiolon = 75;
@@ -232,7 +211,7 @@ export function savePdfCode(data, callback) {
             element,
             elements
         })
-    })
+    });
 
    
 
@@ -256,7 +235,7 @@ export function savePdfCode(data, callback) {
             },
         };
 
-        let imageWidht = 382 - 7;
+        let imageWidth = 382 - 7;
         let legendContent = legend.map((row) => {
             return [
                 {
@@ -283,17 +262,17 @@ export function savePdfCode(data, callback) {
                 {
             table: {
                 border: [false, false, false, false],
-                widths: [20, imageWidht],
+                widths: [20, imageWidth],
                 body:
                     legendContent
                 },
             layout: 'noBorders'
-        }]
-        const pdfPages = [{
+        }];
+        docDefinition.content = [{
             style: 'tableExample',
             table: {
                 border: [false, false, false, false],
-                widths: [imageWidht + 40, imageWidht],
+                widths: [imageWidth + 40, imageWidth],
                 body: [[
                     {
                         style: 'gridTable',
@@ -309,35 +288,28 @@ export function savePdfCode(data, callback) {
             pageBreak: 'after',
             layout: 'noBorders'
         },
-        {
-            style: 'tableExample',
-            table: {
-                border: [false, false, false, false],
-                widths: [imageWidht + 40, imageWidht],
-                body: [[
-                    {
-                        style: 'gridTable',
-                        table: {
-                            widths: _.times(gridWidth, () => 15),
-                            body: coloredGrid
+            {
+                style: 'tableExample',
+                table: {
+                    border: [false, false, false, false],
+                    widths: [imageWidth + 40, imageWidth],
+                    body: [[
+                        {
+                            style: 'gridTable',
+                            table: {
+                                widths: _.times(gridWidth, () => 15),
+                                body: coloredGrid
+                            }
                         }
-                    }
-                    ,
-                    [""]
-                ]]
-            },
-            layout: 'noBorders'
-        }];
-
-
-        docDefinition.content = pdfPages;
+                        ,
+                        [""]
+                    ]]
+                },
+                layout: 'noBorders'
+            }];
         docDefinition.content[docDefinition.content.length - 1].pageBreak = undefined;
-        window.pdfMake.createPdf(docDefinition).getDataUrl(function (outDoc) {
-            document.getElementById('pdfV').src = outDoc;
-
-        });
-        // const title = 'arkusz-kodowania.pdf'
-        // window.pdfMake.createPdf(docDefinition).download(title, function(){callback(true);});
+        const title = 'arkusz-kodowania.pdf';
+        window.pdfMake.createPdf(docDefinition).download(title, function(){callback(true);});
 
     }
     catch (e) {

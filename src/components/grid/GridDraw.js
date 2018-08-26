@@ -12,18 +12,18 @@ Object.size = function (obj) {
 
 class GridCell extends Component {
     constructor(props) {
-        super(props)
-        let color = WHITE
+        super(props);
+        let color = WHITE;
         this.changeColor = this.changeColor.bind(this);
         this.paintBackgroud = this.paintBackgroud.bind(this);
 
         this.click = this.click.bind(this);
-        this.createState = this.createState.bind(this);
+        GridCell.createState = GridCell.createState.bind(this);
 
-        this.state = this.createState(color)
+        this.state = GridCell.createState(color)
     }
 
-    createState(color) {
+    static createState(color) {
         return {
             style: {
                 'backgroundColor': color
@@ -34,13 +34,13 @@ class GridCell extends Component {
     componentWillReceiveProps(nextProps) {
         // You don't have to do this check first, but it can help prevent an unneeded render
         if (nextProps.drawColor !== this.state.color && nextProps.clear) {
-            this.setState(this.createState(nextProps.drawColor));
+            this.setState(GridCell.createState(nextProps.drawColor));
         }
     }
 
     changeColor(event) {
         if (this.props.pressed) {
-            let color = this.props.pressed ? this.props.drawColor : WHITE
+            let color = this.props.pressed ? this.props.drawColor : WHITE;
             this.paintBackgroud(color)
         }
     }
@@ -50,14 +50,14 @@ class GridCell extends Component {
     }
 
     paintBackgroud(color) {
-        this.props.drawHandler(this.props.number, this.props.rownumber, color, this.state.color)
-        this.setState(this.createState(color));
+        this.props.drawHandler(this.props.number, this.props.rownumber, color, this.state.color);
+        this.setState(GridCell.createState(color));
     }
     render() {
         let number = this.props.number;
         let rownumber = this.props.rownumber;
-        let style = this.createState(this.state.color).style
-        return <td onClick={this.click} onMouseOver={this.changeColor} style={style} key={number + "r" + rownumber}></td>
+        let style = GridCell.createState(this.state.color).style;
+        return <td onClick={this.click} onMouseOver={this.changeColor} style={style} key={number + "r" + rownumber} />
     }
 }
 
@@ -70,7 +70,7 @@ let GridRenderer = (props) => {
         <td style={{ border: "0px" }}>{number}</td>
         {rowRenderer(number, color)}
     </tr>
-}
+};
 
 const WHITE = "#ffffff";
 const DEFAULT_WIDHT = 17;
@@ -80,18 +80,18 @@ class GridDraw extends Component {
     
 
     constructor(props) {
-        super(props)
+        super(props);
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseUp = this.mouseUp.bind(this);
         this.drawHandler = this.drawHandler.bind(this);
         this.clear = this.clear.bind(this);
         this.changeHeight = this.changeHeight.bind(this);
         this.changeWidth = this.changeWidth.bind(this);
-        this.state =  { "pressed": false, drawColor: "#000000", legend: {}, colorGrid:this.generateGrid(DEFAULT_HEIGHT, DEFAULT_WIDHT) , clear: false, width: DEFAULT_WIDHT, height:DEFAULT_HEIGHT};
+        this.state =  { "pressed": false, drawColor: "#000000", legend: {}, colorGrid:GridDraw.generateGrid(DEFAULT_HEIGHT, DEFAULT_WIDHT) , clear: false, width: DEFAULT_WIDHT, height:DEFAULT_HEIGHT};
     }
 
 
-    generateGrid(height, width)
+    static generateGrid(height, width)
     {
         let row = [];
         let cols = [];
@@ -136,12 +136,12 @@ class GridDraw extends Component {
         }
         const LETTERS = [
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
-        ]
-        let legend = {...this.state.legend}
+        ];
+        let legend = {...this.state.legend};
         const field = LETTERS[colNumber - 1] + " " + rowNumber;
 
         if (!(color === WHITE || color === "#fff" || color === "white")) {
-            const colorLegend = legend[color] || {}
+            const colorLegend = legend[color] || {};
             colorLegend[field] = true;
             legend[color] = colorLegend
         }
@@ -154,13 +154,13 @@ class GridDraw extends Component {
         let newRow = newGrid[rowNumber-1].slice();
         newRow[colNumber-1] = color;
         newGrid[rowNumber-1] = newRow;
-        console.log("New grid",newGrid)
+        console.log("New grid",newGrid);
         this.setState({ legend, colorGrid:newGrid });
     }
 
     clear() {
         this.setState({ "pressed": false, drawColor: WHITE, legend: {} , clear:true},()=>{
-            let grid = this.generateGrid(this.state.height,this.state.width);
+            let grid = GridDraw.generateGrid(this.state.height,this.state.width);
             this.setState( { "pressed": false, drawColor: "#000000", colorGrid: grid, legend: {}, clear: false})
         });
     }
@@ -182,14 +182,14 @@ class GridDraw extends Component {
                     clear={this.state.clear}
                     drawHandler={this.drawHandler} />
             );
-        }
+        };
         let rows = rowCount.map((number) =>
             <GridRenderer key={"GridRender_"+number} number={number} color={this.state.color} rowRenderer={rowRenderer} />
         );
 
-        let legend = []
+        let legend = [];
         _.forOwn(this.state.legend, (value, element) => {
-            let elements = []
+            let elements = [];
             _.forOwn(value, (k, v) => {
                 elements.push(<span key={v}>{v}; </span>)
             });
@@ -197,7 +197,7 @@ class GridDraw extends Component {
                 <span style={{ 'backgroundColor': element }}>KOLOR</span>
                 {elements}
             </div>)
-        })
+        });
 
         let colors = [
             '#000000', //black
@@ -211,8 +211,8 @@ class GridDraw extends Component {
             '#ffaec9',//pink
             '#b83dba'//purple:
         ].map((c) => {
-            return <div className='colorPick' key={'colorPick_'+c} onClick={() => this.setState({ 'drawColor': c })} style={{ 'backgroundColor': c }}></div>
-        })
+            return <div className='colorPick' key={'colorPick_' + c} onClick={() => this.setState({'drawColor': c})} style={{'backgroundColor': c}} />
+        });
         return <div className="container">
             <div className="row">
                 <div className="col">
@@ -231,10 +231,10 @@ class GridDraw extends Component {
                     <div>
                         Rozmiar:
                         <div className="row">
-                        Szerokosć: <input type="text" value={this.state.width} onChange={this.changeWidth} size={2}/>
+                        Szerokosć: <input type="number" min={1} max={17} step={1} value={this.state.width} onChange={this.changeWidth} size={2}/>
                         </div>
                         <div className="row">
-                        Wysokosc: <input type="text" value={this.state.height} onChange={this.changeHeight} size={2}/>
+                        Wysokosc: <input type="number" min={1} max={23} step={1}  value={this.state.height} onChange={this.changeHeight} size={2}/>
                         </div>
                         
                     </div>
