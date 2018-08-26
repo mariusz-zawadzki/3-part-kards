@@ -14,7 +14,7 @@ class App extends Component {
             <div className="container">
                 <ul className="nav nav-tabs">
                     <li className="nav-item"><NavLink className="nav-link" to={"/3-cards"} isActive={matchOrDefault}>Karty trójdzielne</NavLink></li>
-                    <li className="nav-item"><NavLink className="nav-link" to={"/2-cards"}>Karty super obrazkowe</NavLink></li>
+                    <li className="nav-item"><NavLink className="nav-link" to={"/2-cards"}>Karty obrazkowe</NavLink></li>
                     <li className="nav-item"><NavLink className="nav-link" to={"/grid"}>Siatka kodowania</NavLink></li>
                     <li className="nav-item"><NavLink className="nav-link" to={"/changelog"}>Co nowego</NavLink></li>
                 </ul>
