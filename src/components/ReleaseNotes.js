@@ -14,6 +14,12 @@ const ReleaseNotes = () => (
                         </li>
                     </ul>
                 </li>
+                <li className="pb-3">
+                    29.08.2018
+                    <ul>
+                        <li>Nowe narzędzie do kadrowania w zakładcie 'Karty obrazkowe'</li>
+                    </ul>
+                </li>
                 <li>
                     Planowane na najbliższy czas:
                     <ul>

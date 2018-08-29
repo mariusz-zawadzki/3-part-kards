@@ -2,8 +2,13 @@
     outline: 2px solid;
 }
 .cropper-container{
-    width: 520px;
-    height: 420px !important;
+    min-width: 520px !important;
+    min-height: 420px !important;
+}
+
+#root .twoCards .cropper-container{
+    min-width: 520px !important;
+    min-height: 520px !important;
 }
 .cropper-wrap-box{
     display: none;

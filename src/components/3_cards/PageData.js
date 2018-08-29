@@ -67,7 +67,7 @@ class PageData extends Component {
         if (this.state.croppieUrl === EMPTY_URL && (Math.abs(data.x) > 1 || Math.abs(data.y) > 1)) {
             newState = {...newState, changed: true}
         }
-        const zoom = this.extractZoom();
+        const zoom = PageData.extractZoom(this.refs.cropper);
         const currentZoom = parseFloat(this.state.zoom);
         if (currentZoom.toFixed(2) !== zoom.toFixed(2)) {
             newState = {...newState, zoom: zoom.toFixed(2), delayed: false}
@@ -77,8 +77,8 @@ class PageData extends Component {
         }
     }
 
-    extractZoom() {
-        let image = this.refs.cropper.getImageData();
+    static extractZoom(cropper) {
+        let image = cropper.getImageData();
         return (image.width / image.naturalWidth) * 100.0;
     }
 
@@ -126,7 +126,6 @@ class PageData extends Component {
                         zoom={this._setZoom.bind(this)}
                         crop={this._crop.bind(this)}
                         ready={this._read.bind(this)}
-
                     />
                     <div>
                         <input type="range" min={ZOOM_PERCENTAGE.min} max={ZOOM_PERCENTAGE.max} step={0.01}

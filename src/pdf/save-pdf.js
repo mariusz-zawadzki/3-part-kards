@@ -12,11 +12,11 @@ function getTwoPartPage(page) {
             body: [
                 [
                     {
-                        image: imageLeft,
+                        image: imageLeft || pixel,
                         width: imageWidht
                     },
                     {
-                        image: imageRight,
+                        image: imageRight || pixel,
                         width: imageWidht
                     }
                 ]

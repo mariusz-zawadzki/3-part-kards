@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PageData from './PageData'
-import {EMPTY_URL} from './../../consts'
 import {savePdf2} from './../../pdf/save-pdf'
+import {EMPTY_URL_SQUARE} from "../../consts";
 class Pages extends Component {
     render() {
         let renderuje = false;
@@ -29,31 +29,33 @@ class Pages extends Component {
 
         function renderuj(){
             let reqPages = []
-            console.log(numbers);
             for(var n=0; n < numbers.length; n+=2)
             {
                 let i = numbers[n]
                 let imgDataLeft = null;
                 let imgDataRight = null;
                 let pageState = pages[i].state;
-                if(pageState && pageState.imgData && pageState.imgData !== EMPTY_URL)
+                if(pageState && pageState.imgData && (pageState.croppieUrl !== EMPTY_URL_SQUARE || pageState.changed))
                 {
                     imgDataLeft = pageState.imgData
                 }
                 if(pages[i+1]!== undefined)
                 {
                     pageState = pages[i+1].state;
-                    if(pageState && pageState.imgData && pageState.imgData !== EMPTY_URL)
+                    if(pageState && pageState.imgData && (pageState.croppieUrl !== EMPTY_URL_SQUARE || pageState.changed))
                     {
                         imgDataRight = pageState.imgData
                     }
                 }
-                
-                reqPages.push({
-                    imgDataLeft,
-                    imgDataRight
-                })
+                if(imgDataLeft || imgDataRight)
+                {
+                    reqPages.push({
+                        imgDataLeft,
+                        imgDataRight
+                    })
+                }
             }
+            console.log(reqPages)
             that.setState({renderuje:true});
             savePdf2(reqPages, renderStop);
         }
