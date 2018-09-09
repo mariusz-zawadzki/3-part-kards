@@ -12,7 +12,7 @@ class PageData extends Component {
     constructor(props) {
         super(props);
 
-        let stateImg = EMPTY_URL;
+        let stateImg = props.imgUrl || EMPTY_URL;
         // stateImg = '/child.jpg'
         let width = CARD_SIZES.width;
         let height = CARD_SIZES.height

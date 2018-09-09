@@ -27,7 +27,9 @@ class FileUpload extends Component {
                            type="file"
                            className="d-none"
                            onChange={(e) => upload(this)}
-                           onClick={(e) => {this.value = null}} />
+                           onClick={(e) => {this.value = null}}
+                           multiple={this.props.multiple || false}
+                    />
                 </label>
             </div>
             </form>

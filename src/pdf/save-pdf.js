@@ -1,6 +1,6 @@
 import _ from 'lodash';
+import {pixel} from '../consts'
 
-const pixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAoMBgDTD2qgAAAAASUVORK5CYII=';
 function getTwoPartPage(page) {
     const imageLeft = page.imgDataLeft;
     const imageRight = page.imgDataRight;

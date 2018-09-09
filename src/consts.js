@@ -19,5 +19,6 @@ module.exports = {
         max: MAX_ZOOM * HUNDRED,
         min: MIN_ZOOM * HUNDRED,
         default: DEFAULT_ZOOM * HUNDRED
-    }
+    },
+    pixel : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8Xw8AAoMBgDTD2qgAAAAASUVORK5CYII='
 };

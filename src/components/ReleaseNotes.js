@@ -1,4 +1,5 @@
 import React from 'react'
+import { getLanguagePdf } from '../pdf/language-cards-pdf'
 
 const ReleaseNotes = () => (
     <div className="p-3">
@@ -27,7 +28,9 @@ const ReleaseNotes = () => (
                             pomysłu z zapisywaniem przybliżenia, tak by można było zapisać pojedyńczy obrazek do
                             ponownej obróbki.
                         </li>
-                        <li>Nowy rodzaj kart - karty językowe.</li>
+                        <li>Nowy rodzaj kart - karty językowe.
+                            {/*<button className={"btn btn-primary"} onClick={() => getLanguagePdf()} value={"PDF"}/>*/}
+                        </li>
                         <li>Nowy rodzaj kart - 'karty kontynentów'.</li>
                     </ul>
                 </li>
