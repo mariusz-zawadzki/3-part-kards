@@ -1,28 +1,61 @@
 import React, {Component} from 'react';
-
+import _ from 'lodash'
 
 class FileUpload extends Component {
+
+    readUploadedFileAsDataUrl(inputFile) {
+        const temporaryFileReader = new FileReader();
+
+        return new Promise((resolve, reject) => {
+            temporaryFileReader.onerror = () => {
+                temporaryFileReader.abort();
+                reject(new DOMException("Problem parsing input file."));
+            };
+
+            temporaryFileReader.onload = () => {
+                const lastDot = inputFile.name.lastIndexOf('.');
+                let fileName = inputFile.name.substring(0, lastDot);
+                let result = {data: temporaryFileReader.result, title: fileName};
+                console.log("Success", result);
+                resolve(result);
+            };
+            temporaryFileReader.readAsDataURL(inputFile);
+        });
+    };
 
     render() {
         const upload = () => {
             let input = this.fileInput;
             let that = this;
             if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    that.props.updateUrl(e.target.result);
+                if(this.props.multiple){
+                    Promise.all(
+                        _.map(input.files,this.readUploadedFileAsDataUrl)
+                    ).then((results)=>{
+                        this.props.updateUrl(results);
+                    })
                 }
-                reader.readAsDataURL(input.files[0]);
+                else
+                {
+                    this.readUploadedFileAsDataUrl(input.files[0])
+                        .then((result)=>{
+                            that.props.updateUrl(result);
+                        });
+                }
                 this.value=null;
             }
             else {
                 console.log("Sorry - you're browser doesn't support the FileReader API");
             }
         };
+
+        let label = this.props.label || "Kliknij by wybrać plik."
+
         return (
             <form>
             <div className="form-group">
-                <label className="btn btn-secondary">Kliknij by wybrać plik.
+                <label className="btn btn-secondary">
+                    {label}
                     <input ref={(input) => {this.fileInput = input;}}
                            type="file"
                            className="d-none"

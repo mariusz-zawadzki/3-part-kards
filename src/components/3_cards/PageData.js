@@ -19,11 +19,18 @@ class PageData extends Component {
         ;
         this.state = {
             zoom: ZOOM_PERCENTAGE.default,
-            'title': '',
+            'title': props.title || '',
             'croppieUrl': stateImg,
             'imgData': stateImg,
             width,
             height
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        // update images on change from props
+        if (nextProps.imgUrl) {
+            this.setState({ 'croppieUrl': nextProps.imgUrl, 'imgData': nextProps.imgUrl, title: nextProps.title});
         }
     }
 
@@ -98,11 +105,11 @@ class PageData extends Component {
         return (
             <div className="col">
                 <div className="form-group">
-                    <FileUpload updateUrl={(url) => {
-                        this.setState({"croppieUrl": url});
+                    <FileUpload updateUrl={({data, title}) => {
+                        console.log(title);
+                        this.setState({"croppieUrl": data, title:title});
                     }}/>
                 </div>
-                {/*<div ref="croppieElement"></div>*/}
                 <div className={"my-cropper-container"}>
                     <Cropper
                         className={"cropper-container"}
@@ -140,11 +147,10 @@ class PageData extends Component {
                     }}/> %
                     </div>
                     <div className="form-group">
-                        <input className="form-control text-center" onChange={(input) => {
-                            this.setState({title: this.titleInput.value})
-                        }} placeholder="Tytuł" ref={(input) => {
-                            this.titleInput = input;
-                        }}/></div>
+                        <input className="form-control text-center" value={this.state.title} onChange={(input) => {
+                            this.setState({title: input.target.value})
+                        }} placeholder="Tytuł"/>
+                    </div>
                     <hr/>
                 </div>
             </div>

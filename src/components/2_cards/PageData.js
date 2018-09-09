@@ -8,7 +8,7 @@ class PageData extends Component {
     constructor(props) {
         super(props);
 
-        let stateImg = EMPTY_URL_SQUARE;
+        let stateImg = props.imgUrl || EMPTY_URL_SQUARE;
         let width = CARD_SIZES.width;
         let height = CARD_SIZES.width;
         this.state = {
@@ -22,6 +22,13 @@ class PageData extends Component {
         };
     }
 
+
+    componentWillReceiveProps(nextProps) {
+        // update images on change from props
+        if (nextProps.imgUrl) {
+            this.setState({ 'croppieUrl': nextProps.imgUrl, 'imgData': nextProps.imgUrl, title: nextProps.title});
+        }
+    }
     stateSet(cropper, zoom) {
         cropper.zoomTo(zoom);
     }
@@ -94,9 +101,8 @@ class PageData extends Component {
         return (
             <div className="col">
                 <div className="form-group">
-                    <FileUpload updateUrl={(url) => {
-                        this.setState({"croppieUrl": url});
-                        this.croppie.bind({'url': url})
+                    <FileUpload updateUrl={({data, title}) => {
+                        this.setState({"croppieUrl": data, title});
                     }}/>
                 </div>
 

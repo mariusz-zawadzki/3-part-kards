@@ -72,3 +72,8 @@ body .grid-draw-table{
     padding: 1rem;
   }
 }
+
+form.multiFile{
+  float: left;
+  margin-left: 150px;
+}

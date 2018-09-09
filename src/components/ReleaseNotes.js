@@ -1,5 +1,5 @@
 import React from 'react'
-import { getLanguagePdf } from '../pdf/language-cards-pdf'
+import {getLanguagePdf} from '../pdf/language-cards-pdf'
 
 const ReleaseNotes = () => (
     <div className="p-3">
@@ -19,6 +19,26 @@ const ReleaseNotes = () => (
                     29.08.2018
                     <ul>
                         <li>Nowe narzędzie do kadrowania w zakładcie 'Karty obrazkowe'</li>
+                    </ul>
+                </li>
+                <li className="pb-3">
+                    09.09.2018
+                    <ul>
+                        <li>Karty trójdzielne i karty obrazkowe
+                            <ol>
+                                <li>Możliwośc wgrywania wielu plików na raz. (nadpisuje istniejące obrazki).</li>
+                                <li>Jeśli chcesz użyć opcji "Wgraj wiele plików", najlepiej umieścić wszystkie pliki w
+                                    jednym folderze i potem je wgrać w ten sposób.
+                                </li>
+                            </ol>
+                        </li>
+                        <li>Karty trójdzielne
+                            <ol>
+                                <li><strong>Nadpisanie tytuły nazwą pliku.</strong> - zalecam nazywanie plików tak jakie
+                                    mają być podpisy, oszczędzi to wtedy pracy.
+                                </li>
+                            </ol>
+                        </li>
                     </ul>
                 </li>
                 <li>
