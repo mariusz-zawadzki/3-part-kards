@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PageData from './PageData'
 import {savePdf2} from './../../pdf/save-pdf'
-import {EMPTY_URL, EMPTY_URL_SQUARE} from "../../consts";
+import {EMPTY_URL_SQUARE} from "../../consts";
 import FileUpload from "../FileUpload";
 import {getIndexOrDefault} from './../../utils'
 
