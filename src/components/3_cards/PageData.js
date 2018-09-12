@@ -29,8 +29,10 @@ class PageData extends Component {
 
     componentWillReceiveProps(nextProps) {
         // update images on change from props
-        if (nextProps.imgUrl) {
-            this.setState({ 'croppieUrl': nextProps.imgUrl, 'imgData': nextProps.imgUrl, title: nextProps.title});
+        if (nextProps.imgUrl !== this.state.croppieUrl) {
+            this.setState({ 'croppieUrl': nextProps.imgUrl, 'imgData': nextProps.imgUrl, title: nextProps.title}, ()=>{
+                this._read();
+            });
         }
     }
 
@@ -74,14 +76,19 @@ class PageData extends Component {
         if (this.state.croppieUrl === EMPTY_URL && (Math.abs(data.x) > 1 || Math.abs(data.y) > 1)) {
             newState = {...newState, changed: true}
         }
+        newState = this.addCurrentZoomToState(newState);
+        if (newState !== {}) {
+            this.setState({...newState})
+        }
+    }
+
+    addCurrentZoomToState(newState) {
         const zoom = PageData.extractZoom(this.refs.cropper);
         const currentZoom = parseFloat(this.state.zoom);
         if (currentZoom.toFixed(2) !== zoom.toFixed(2)) {
             newState = {...newState, zoom: zoom.toFixed(2), delayed: false}
         }
-        if (newState !== {}) {
-            this.setState({...newState})
-        }
+        return newState;
     }
 
     static extractZoom(cropper) {

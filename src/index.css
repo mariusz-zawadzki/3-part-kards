@@ -8,6 +8,7 @@ body {
 }
 .croppie-container{
   height: auto !important;
+  max-height: 420px !important;
 }
 #root .croppie-container .cr-boundary {
   width: 520px;
