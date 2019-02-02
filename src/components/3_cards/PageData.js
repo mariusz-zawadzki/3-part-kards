@@ -15,8 +15,7 @@ class PageData extends Component {
         let stateImg = props.imgUrl || EMPTY_URL;
         // stateImg = '/child.jpg'
         let width = CARD_SIZES.width;
-        let height = CARD_SIZES.height
-        ;
+        let height = CARD_SIZES.height;
         this.state = {
             zoom: ZOOM_PERCENTAGE.default,
             'title': props.title || '',
@@ -115,6 +114,7 @@ class PageData extends Component {
                     <FileUpload updateUrl={({data, title}) => {
                         console.log(title);
                         this.setState({"croppieUrl": data, title:title});
+                        this.props.onImageSelect({data, title})
                     }}/>
                 </div>
                 <div className={"my-cropper-container"}>

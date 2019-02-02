@@ -1,8 +1,9 @@
 import _ from 'lodash';
-import {pixel} from '../consts'
 
 const BORDER = [true, true, true, true];
-// const imgWidth = 60 * 2.87;
+const colWidth = 45 * 2.87;
+const tablePadding = 7;
+const boxSize = colWidth - 10;
 const imgWidth = 172;
 
 export function getLanguagePdf(){
@@ -10,7 +11,7 @@ export function getLanguagePdf(){
     try {
         const docDefinition = {
             pageSize: 'A4',
-            pageOrientation: 'landscape',
+            pageOrientation: 'portrait',
 
             styles: {
                 tableExample: {
@@ -24,15 +25,16 @@ export function getLanguagePdf(){
             {
                 style: 'tableExample',
                 table: {
-                    widths: [60*2.841, 60*2.841, 60*2.841],
+                    widths: [colWidth, colWidth, colWidth],
+                    heights: [boxSize,boxSize,boxSize,boxSize],
                     body: getLanguageGrid()
                 },
                 pageBreak: 'after',
                 layout: {
-                    paddingLeft: () => 14,
-                    paddingRight: () => 14,
-                    paddingTop: () => 14,
-                    paddingBottom: () => 14
+                    paddingLeft: () => tablePadding,
+                    paddingRight: () => tablePadding,
+                    paddingTop: () => tablePadding,
+                    paddingBottom: () => tablePadding
                 }
             }
         ];
@@ -63,23 +65,27 @@ export function getLanguageGrid() {
     console.log(JSON.stringify(times));
     return times
 }
-
 function getRow(row){
     return _.times(3, (col) => {
+        const text = "czarownica nożyczki";
+        console.log("text leng is "+ text.length + "and shorted is");
+        const margin = parseInt(boxSize / 2 - tablePadding *2* (text.length / 10));
+        console.log("margin is " + margin)
         return [{
                 table: {
                     border: BORDER,
-                    // heights: function (row) {
-                    //     return [168];//(row + 1) * 25;
-                    // },
+                    widths:  [boxSize],
+                    heights: boxSize,
                     body: [
-                        [{
-                        image: pixel,
-                        width: 172,
-                        height: 172
-                    }]]
+                        [
+                            [
+                                {text : [text], fontSize: 22, margin: [0, margin, 0, 0]}
+                        ]
+                    ]]
                 }
-        }];
+        }
+
+        ];
         // return {
         //     border: BORDER,
         //     text: row + ' ' + col

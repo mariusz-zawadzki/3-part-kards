@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import PageData from './PageData'
-import { EMPTY_URL } from './../../consts'
+import {EMPTY_URL} from './../../consts'
 import {savePdf} from './../../pdf/save-pdf'
 import FileUpload from "../FileUpload";
 import {getIndexOrDefault} from './../../utils'
+import {resize} from "../../utils";
+import _ from 'lodash'
 
-
+const EMPTY_TILE = {data: EMPTY_URL, title:''};
 class Pages extends Component {
 
     constructor(props) {
@@ -13,7 +15,7 @@ class Pages extends Component {
         this.state = {
             'iloscStron': 10,
             'renderuje': false,
-            'preLoadedFiles': []
+            'preLoadedFiles': [_.times(10, ()=>{ return  EMPTY_TILE;})]
         }
     }
 
@@ -60,7 +62,9 @@ class Pages extends Component {
         const listItems = numbers.map((number) => {
             const index = number - 1;
             let imageData = getIndexOrDefault(this.state.preLoadedFiles, index, {data: EMPTY_URL, title:''});
-            return <PageData imgUrl={imageData.data} title={imageData.title} key={number} ref={(pageData) => {
+            let key = "Page_data_pages_3"+number;
+            return <PageData onImageSelect={(image)=>{
+            }} imgUrl={imageData.data} title={imageData.title} key={key} ref={(pageData) => {
                 pages[number + ""] = pageData
             }}/>
         });
@@ -75,7 +79,11 @@ class Pages extends Component {
                 <div className="col">
                     <label>Ilość stron: </label>
                     <input value={this.state.iloscStron}
-                           onChange={(change) => this.setState({'iloscStron': change.target.value})}/>
+                           onChange={(change) =>{
+                               const iloscStron = change.target.value;
+                               let preloadedFiles = resize(this.state.preLoadedFiles.slice(0), iloscStron, EMPTY_TILE);
+                               this.setState({iloscStron, preloadedFiles})
+                           }}/>
                 </div>
                 <div className="col">
                     <FileUpload multiple={true}
