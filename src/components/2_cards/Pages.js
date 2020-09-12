@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import PageData from './PageData'
-import {savePdf2} from './../../pdf/save-pdf'
+import {savePdf2} from '../../pdf/save-pdf'
 import {EMPTY_URL_SQUARE} from "../../consts";
 import FileUpload from "../FileUpload";
-import {getIndexOrDefault} from './../../utils'
+import {getIndexOrDefault} from '../../utils'
 
 class Pages extends Component {
 

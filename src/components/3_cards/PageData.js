@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import FileUpload from "./../FileUpload";
+import FileUpload from "../FileUpload";
 import _ from 'lodash';
 import {CARD_SIZES, EMPTY_URL, ZOOM, ZOOM_PERCENTAGE} from './../../consts'
 
@@ -28,7 +28,8 @@ class PageData extends Component {
 
     componentWillReceiveProps(nextProps) {
         // update images on change from props
-        if (nextProps.imgUrl !== this.state.croppieUrl) {
+        if (nextProps.imgUrl !== undefined && nextProps.imgUrl !== this.state.croppieUrl) {
+            console.log("setting state of croppeid image", nextProps.imgUrl)
             this.setState({ 'croppieUrl': nextProps.imgUrl, 'imgData': nextProps.imgUrl, title: nextProps.title}, ()=>{
                 this._read();
             });
@@ -43,7 +44,7 @@ class PageData extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.zoom !== this.state.zoom) {
-            const cropper = this.refs.cropper;
+            const cropper = this.cropper;
             const zoom = this.state.zoom / 100.0;
             if (this.state.delayed) {
                 this.delayedSetState(cropper, zoom)
@@ -55,11 +56,11 @@ class PageData extends Component {
     }
 
     _read() {
-        this.refs.cropper.setCropBoxData({width: CARD_SIZES.width});
+        this.cropper.setCropBoxData({width: CARD_SIZES.width});
     }
 
     _crop() {
-        const croppedCanvas = this.refs.cropper.getCroppedCanvas(
+        const croppedCanvas = this.cropper.getCroppedCanvas(
             {
                 width: CARD_SIZES.width,
                 height: CARD_SIZES.height,
@@ -67,7 +68,7 @@ class PageData extends Component {
             });
 
         const imgData = croppedCanvas.toDataURL();
-        const data = this.refs.cropper.getData();
+        const data = this.cropper.getData();
         let newState = {};
         if (this.state.imgData !== imgData) {
             newState = {imgData}
@@ -82,7 +83,7 @@ class PageData extends Component {
     }
 
     addCurrentZoomToState(newState) {
-        const zoom = PageData.extractZoom(this.refs.cropper);
+        const zoom = PageData.extractZoom(this.cropper);
         const currentZoom = parseFloat(this.state.zoom);
         if (currentZoom.toFixed(2) !== zoom.toFixed(2)) {
             newState = {...newState, zoom: zoom.toFixed(2), delayed: false}
@@ -99,12 +100,17 @@ class PageData extends Component {
         const detail = e.detail;
         if (detail.ratio > ZOOM.max) {
             e.preventDefault();
-            this.refs.cropper.zoomTo(ZOOM.max);
+            this.cropper.zoomTo(ZOOM.max);
         }
         if (detail.ratio < ZOOM.min) {
             e.preventDefault();
-            this.refs.cropper.zoomTo(ZOOM.min);
+            this.cropper.zoomTo(ZOOM.min);
         }
+    }
+
+
+    onCropperInit(cropper) {
+        this.cropper = cropper;
     }
 
     render() {
@@ -136,10 +142,10 @@ class PageData extends Component {
                         aspectRatio={1.2380}
                         zoomable={true}
                         background={false}
-                        ref='cropper'
                         zoom={this._setZoom.bind(this)}
                         crop={this._crop.bind(this)}
                         ready={this._read.bind(this)}
+                        onInitialized={this.onCropperInit.bind(this)}
                     />
                     <div>
                         <input type="range" min={ZOOM_PERCENTAGE.min} max={ZOOM_PERCENTAGE.max} step={0.01}

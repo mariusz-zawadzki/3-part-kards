@@ -49,7 +49,7 @@ const ReleaseNotes = () => (
                             ponownej obróbki.
                         </li>
                         <li>Nowy rodzaj kart - karty językowe.
-                            {/*<button className={"btn btn-primary"} onClick={() => getLanguagePdf()} value={"PDF"}/>*/}
+                            <button className={"btn btn-primary"} onClick={() => getLanguagePdf()} value={"PDF"}/>
                         </li>
                         <li>Nowy rodzaj kart - 'karty kontynentów'.</li>
                     </ul>

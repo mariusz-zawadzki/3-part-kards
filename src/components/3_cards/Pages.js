@@ -12,6 +12,7 @@ class Pages extends Component {
 
     constructor(props) {
         super(props);
+        console.log("clearing all files new component")
         this.state = {
             'iloscStron': 10,
             'renderuje': false,

@@ -2,7 +2,8 @@ module.exports = {
 
     getIndexOrDefault: (array, index, defaultValue) => {
         if (array && array.length > index) {
-            return array[index]
+            const arrayElement = array[index];
+            return {arrayElement}
         }
         return defaultValue;
     },
